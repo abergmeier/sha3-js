@@ -125,26 +125,26 @@ var keccak = (function () {
 		for (round = 0; round < 24; round += 1) {
 			// THETA STEP
 			C = zeros(5);
-			for (x = 0; x < 5; x += 1) {
+			for (x = 0; x < 5; x += 1) { //Parallelizable?
 				for (y = 0; y < 5; y += 1) {
 					C[x].xor(state(x, y));
 				}
 			}
 			// Extra logic needed because L() objects are dynamic.
 			// D[x] = C[x + 1]
-			D = C.map(L.clone);
+			D = C.map(L.clone); //Parallelizable?
 			D = D.concat(D.splice(0, 1));
 			// D[x] = C[x - 1] xor rot(C[x+1], 1)
-			for (x = 0; x < 5; x += 1) {
+			for (x = 0; x < 5; x += 1) { //Parallelizable?
 				D[x].circ(1).xor(C[(x + 4) % 5]);
 			}
-			for (x = 0; x < 5; x += 1) {
+			for (x = 0; x < 5; x += 1) { //Parallelizable?
 				for (y = 0; y < 5; y += 1) {
 					state(x, y).xor(D[x]);
 				}
 			}
 			// RHO STEP
-			for (x = 0; x < 5; x += 1) {
+			for (x = 0; x < 5; x += 1) { //Parallelizable?
 				for (y = 0; y < 5; y += 1) {
 					state(x, y).circ(r[5 * y + x]);
 				}
@@ -157,7 +157,7 @@ var keccak = (function () {
 			
 			// CHI STEP
 			b = state.clone();
-			for (x = 0; x < 5; x += 1) {
+			for (x = 0; x < 5; x += 1) { //Parallelizable?
 				for (y = 0; y < 5; y += 1) {
 					state(x, y).xor(b(x + 1, y).not().and(b(x + 2, y)));
 				}
